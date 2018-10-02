@@ -66,6 +66,7 @@ window.addEventListener("load",function () {
 			window.requestAnimationFrame(updateLoop);
 		}
 		window.requestAnimationFrame(updateLoop);
+		frameUpdate();
 
 
 },false)

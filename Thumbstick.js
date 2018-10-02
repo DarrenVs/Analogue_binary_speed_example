@@ -10,6 +10,14 @@ function Thumbstick(x, y, size, radius, deadzone) {
 	this.update = function(delta) {
 
 		var xAxis = yAxis = 0;
+
+		// Get keyboard input
+		xAxis += keyboard.KeyD ? 1 : 0;
+		xAxis -= keyboard.KeyA ? 1 : 0;
+		yAxis += keyboard.KeyS ? 1 : 0;
+		yAxis -= keyboard.KeyW ? 1 : 0;
+
+		// Get gamepad input
 		for (var id in gamepads) {
 			var gamepad = gamepads[id];
 			if (gamepad !== null && gamepad.axes) {
@@ -17,16 +25,20 @@ function Thumbstick(x, y, size, radius, deadzone) {
 				yAxis += gamepad.axes[1] || 0;
 			}
 		}
-		this.input.x = xAxis;
-		this.input.y = yAxis;
 
+		// Update input
+		this.input.x = Math.max(Math.min(xAxis, 1), -1);
+		this.input.y = Math.max(Math.min(yAxis, 1), -1);;
+
+		// Update position
         if (this.input.length() > this.deadzone) {
             var normalInput = this.input.unit(1, 1);
             this.x += normalInput.x;
             this.y += normalInput.y;
-        }
 
-		return true;
+			// Return true to indicate we need a frame update as well
+			return true;
+        }
 	}
 
 	this.draw = function(canvas, ctx) {
